@@ -42,8 +42,7 @@ var loginFb = function (req, res) {
         else {
             let username = body.data.user_id;
             //tim kiem neu da tao user trong db
-            usersModel.findOne({username: username})
-                .exec(function (err, user) {
+            usersModel.findOne({username: username}).exec(function (err, user) {
                     if (err) {
                         response.json({code: 0, error: err});
                     }
