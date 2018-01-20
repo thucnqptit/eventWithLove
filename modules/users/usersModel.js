@@ -6,49 +6,6 @@ const usersSchema = require('./usersSchema');
 
 var usersModel = mongoose.model('users', usersSchema);
 
-<<<<<<< HEAD
-var login =  function (req, res) {
-        var username = req.body.username;
-        var password = req.body.password;
-        usersModel.findOne({username: username})
-            .exec(function (err, user) {
-                if (err) {
-                    res.json({code: 0, error: err});
-                }
-                else if (!user) {
-                    res.json({code: 2, error: 'Sai tên đăng nhập'});
-                }
-                else if (user.password !== password) {
-                    res.json({code: 3, error: 'Sai mật khẩu'});
-                }
-                else {
-                    res.json({
-                        code: 1,
-                        access_token: user.access_token,
-                        user: user
-                    });
-
-                    req.user = user;
-                    console.log(req.user);
-                    // ls.set('at', user.access_token)
-                }
-            });
-    }
-    // var loginFB =  function (req, res) {
-    //     var at = req.body.at;
-    //     request('https://graph.facebook.com/v2.11/me?access_token=' + at, { json: true }, (err, res, body) => {
-    //           if (err) { return console.log(err); }
-    //           console.log(body.url);
-    //           console.log(body.explanation);
-    //         });
-    //     }
-var logout =  function (req, res) {
-        var userId = req.user._id;
-        usersModel.update(
-          {_id: userId},
-          {access_token: uuidV4()},
-          function (err) {
-=======
 var login = function (req, res) {
     var username = req.body.username;
     var password = req.body.password;
@@ -127,7 +84,6 @@ var logout = function (req, res) {
         {_id: userId},
         {access_token: uuidV4()},
         function (err) {
->>>>>>> bfffe09798548e97306ac7631261b686832ab3d4
             if (err) res.json({code: 0, error: err});
             else {
                 req.user = undefined;
