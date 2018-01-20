@@ -54,7 +54,7 @@ router.post('/questions',isVerifiedToken,questions.addQuestion);
 router.put('/questions', isVerifiedToken, questions.editQuestion);
 
 router.get('/events',isVerifiedToken, events.getEventsOnPage);
-router.get('/events/:id',isVerifiedToken, events.getEventById);
+router.get('/events/:id',isVerifiedToken, events.getEvent);
 router.post('/events',isVerifiedToken,events.addEvent);
 router.put('/events', isVerifiedToken, events.editEvent);
 

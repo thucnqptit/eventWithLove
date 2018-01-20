@@ -53,16 +53,16 @@ var addAnswer = function(req, res) {
           answers.save(function (err) {
               if (err) res.json({code: 0, error: err});
               else {
-                var pollId = req.query.pId;
-                     pollsModel.findOne({_id: pollId}, function (err, poll) {
+                var pollId = req.body.pId;
+                     pollsModel.findOne({_id: pollId}).populate('answers').exec( function (err, polls) {
                          if (err) res.json({code: 0, error: err});
-                         else if (!poll) res.json({code: 2, error: 'khong tim thay cau hoi'});
+                         else if (!polls) res.json({code: 2, error: 'khong tim thay cau hoi'});
                          else {
                             polls.answers.push(answers);
                             polls.save(function (err) {
                                  if (err) res.json({code: 0, error: err});
                                  else{
-                                     res.json({code: 1, result: poll});
+                                     res.json({code: 1, result: polls});
                                      // res.json({code: 1, result: answers});
                                  }
                              });
@@ -72,7 +72,7 @@ var addAnswer = function(req, res) {
           });
       }
 var editAnswer = function (req, res) {
-  var answersId = req.query.pId;
+  var answersId = req.query.aId;
        answersModel.findOne({_id: answersId}, function (err, answer) {
            if (err) res.json({code: 0, error: err});
            else if (!answer) res.json({code: 2, error: 'khong tim thay chu su kien'});
@@ -80,7 +80,7 @@ var editAnswer = function (req, res) {
               var content = req.query.content;
               var inc = req.query.inc;
               if(content) answer.content = content;
-              if(inc) answer.quantity ++;
+              if(inc === 1) answer.quantity ++;
                answers.save(function (err) {
                    if (err) res.json({code: 0, error: err});
                    else{

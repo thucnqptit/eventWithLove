@@ -53,20 +53,24 @@ var addPoll = function(req, res) {
           var polls = new pollsModel({
             question : req.body.question
           });
-
           polls.save(function (err) {
               if (err) res.json({code: 0, error: err});
               else {
-                var eventsId = req.query.eId;
-                     eventsModel.findOne({_id: eventsId}, function (err, event) {
+                var eventsId = req.body.eId;
+                console.log(eventsId);
+                     eventsModel.findOne({_id: eventsId})
+                     .populate('processes')
+                     .populate('polls')
+                     .populate('questions')
+                     .exec( function (err, events) {
                          if (err) res.json({code: 0, error: err});
-                         else if (!event) res.json({code: 2, error: 'khong tim thay su kien'});
+                         else if (!events) res.json({code: 2, error: 'khong tim thay su kien'});
                          else {
                             events.polls.push(polls._id);
                              events.save(function (err) {
                                  if (err) res.json({code: 0, error: err});
                                  else{
-                                     res.json({code: 1, result: event});
+                                     res.json({code: 1, result: events});
                                  }
                              });
                          }

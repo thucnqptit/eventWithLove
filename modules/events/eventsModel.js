@@ -9,6 +9,7 @@ var getEventsOnPage = function (req, res) {
         eventsModel.find()
             .populate('processes')
             .populate('polls')
+            .populate('questions')
             .sort({created_at: -1})
             .skip((page - 1) * 20)
             .limit(20)
@@ -23,20 +24,22 @@ var getEventsOnPage = function (req, res) {
                 }
             });
 }
-var getEvents = function (req, res) {
-        eventsModel.findOne({id: req.query.id})
-            .populate('pols')
-            .populate('processes')
-            .exec(function (err, event) {
-                if (err) {
-                    res.json({ code: 1, error: err });
-                } else {
-                    res.json({
-                        code: 1,
-                        result: event
-                    });
-                }
-            });
+var getEvent = function (req, res) {
+console.log(req.params.id);
+      eventsModel.findOne({_id: req.params.id})
+      .populate('processes')
+      .populate('polls')
+      .populate('questions')
+      .exec(function (err, events) {
+          if (err) {
+              res.json({ code: 0, error: err });
+          } else {
+              res.json({
+                  code: 1,
+                  result: events
+              });
+          }
+      });
 }
 var getNumberOfEvents = function (req, res) {
         EventsModel.count()
@@ -62,16 +65,17 @@ var addEvent = function(req, res) {
           events.save(function (err) {
               if (err) res.json({code: 0, error: err});
               else {
-                var usersId = req.query.eOId;
-                     usersModel.findOne({_id: usersId}, function (err, user) {
+                var usersId = req.body.eOId;
+                     usersModel.findOne({_id: usersId}, function (err, users) {
+                       console.log(users,usersId);
                          if (err) res.json({code: 0, error: err});
-                         else if (!user) res.json({code: 2, error: 'khong tim thay chu su kien'});
+                         else if (!users) res.json({code: 2, error: 'khong tim thay chu su kien'});
                          else {
                            users.events.push(events._id);
                              users.save(function (err) {
                                  if (err) res.json({code: 0, error: err});
                                  else{
-                                     res.json({code: 1, result: user});
+                                     res.json({code: 1, result: users});
                                  }
                              });
                          }
@@ -95,7 +99,7 @@ var editEvent = function (req, res) {
        });
 }
 
-const getEventById = (id, callback) => {
+var getEventById = (id, callback) => {
   eventsModel.findOne({'_id' : id}, (err, doc)=> {
     if(err) {
       res.send(err);
@@ -110,5 +114,5 @@ module.exports = {
   getEventsOnPage,
   getNumberOfEvents,
   getEventById,
-  getEvents
+  getEvent
 }

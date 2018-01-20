@@ -57,16 +57,18 @@ var addProcess = function(req, res) {
           processes.save(function (err) {
               if (err) res.json({code: 0, error: err});
               else {
-                var eventsId = req.query.eId;
+                var eventsId = req.body.eId;
                      eventsModel.findOne({_id: eventsId}, function (err, events) {
                          if (err) res.json({code: 0, error: err});
-                         else if (!event) res.json({code: 2, error: 'khong tim thay su kien'});
+                         else if (!events) res.json({code: 2, error: 'khong tim thay su kien'});
                          else {
+
                            events.processes.push(processes._id);
                              events.save(function (err) {
-                                 if (err) res.json({code: 0, error: err});
+                               console.log(events);
+                                 if (err) res.json({code: 4, error: err});
                                  else{
-                                     res.json({code: 1, result: event});
+                                     res.json({code: 1, result: events});
                                  }
                              });
                          }

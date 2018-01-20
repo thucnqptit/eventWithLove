@@ -4,8 +4,7 @@ const ObjectId = Schema.Types.ObjectId;
 
 const eventsSchema = new Schema({
   name : {
-     type : String,
-     required : true
+     type : String
   },
   des : {
      type : String
@@ -19,7 +18,7 @@ const eventsSchema = new Schema({
   address:{
     type: String
   },
-  process:[{
+  processes:[{
     type: ObjectId,
     ref: 'processes'
   }],
@@ -29,7 +28,7 @@ const eventsSchema = new Schema({
   }],
   polls : [{
     type: ObjectId,
-    ref: 'pools'
+    ref: 'polls'
   }]
 }, { timestamps: { createdAt: 'created_at', updatedAt : 'updated_at' }} );
 
