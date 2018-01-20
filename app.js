@@ -38,7 +38,7 @@ mongoose.connect(config.connectionString, (err) => {
   }
 });
 
-const port = process.env.PORT || 1010;
+const port = process.env.PORT || 3003;
 app.listen(port, (err) => {
   console.log(`App listen on ${port}`);
 });

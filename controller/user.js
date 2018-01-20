@@ -35,7 +35,7 @@ var login =  function (req, res) {
                 // ls.set('at', user.access_token)
             }
         });
-}
+};
 
 var logout =  function (req, res) {
     var userId = req.user._id;
@@ -49,7 +49,7 @@ var logout =  function (req, res) {
                 res.json({code: 1 });
             }
         });
-}
+};
 
 
 var getUsersOnPage = function (req, res) {
@@ -69,7 +69,7 @@ var getUsersOnPage = function (req, res) {
                 });
             }
         });
-}
+};
 var getUsers = function (req, res) {
     usersModel.findOne({id: req.query.id})
         .populate('events')
@@ -83,7 +83,7 @@ var getUsers = function (req, res) {
                 });
             }
         });
-}
+};
 var getNumberOfUsers = function (req, res) {
     usersModel.count()
         .exec(function (err, c) {
@@ -96,7 +96,7 @@ var getNumberOfUsers = function (req, res) {
                 });
             }
         });
-}
+};
 var addUser = function(req, res) {
     var users = new usersModel({
         name : req.body.name,
@@ -110,7 +110,7 @@ var addUser = function(req, res) {
             res.json({code: 1, result: users});
         }
     });
-}
+};
 var editUser = function (req, res) {
     var usersId = req.query.eOId;
     usersModel.findOne({_id: usersId}, function (err, user) {
@@ -145,12 +145,12 @@ const updateProfile = (req, res) =>{
 }
 var add = function(req, res) {
           var users = new usersModel({
-            name = req.body.name;
-            gender = req.body.gender;
-            email = req.body.email;
-            phone = req.body.phone;
-            fbId = req.body.link;
-            accessToken = uuidv4();
+            name : req.body.name,
+            gender : req.body.gender,
+            email : req.body.email,
+            phone : req.body.phone,
+            fbId : req.body.link,
+            accessToken : uuidv4()
           });
           usersModel.findOne({email: email})
               .exec(function (err, user) {
