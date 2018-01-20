@@ -23,6 +23,10 @@ const eventsSchema = new Schema({
     type: ObjectId,
     ref: 'processes'
   }],
+  questions : [{
+    type: ObjectId,
+    ref: 'questions'
+  }],
   polls : [{
     type: ObjectId,
     ref: 'pools'

@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const answersSchema = require('./answersSchema');
-
+const pollsSchema = require('../polls/pollsSchema');
 let answersModel = mongoose.model('answers', answersSchema);
-
+let pollsModel = mongoose.model('polls', pollsSchema);
 var getAnswersOnPage = function (req, res) {
         var page = req.query.page || 1;
         answersModel.find()
@@ -53,7 +53,21 @@ var addAnswer = function(req, res) {
           answers.save(function (err) {
               if (err) res.json({code: 0, error: err});
               else {
-                  res.json({code: 1, result: answers});
+                var pollId = req.query.pId;
+                     pollsModel.findOne({_id: pollId}, function (err, poll) {
+                         if (err) res.json({code: 0, error: err});
+                         else if (!poll) res.json({code: 2, error: 'khong tim thay cau hoi'});
+                         else {
+                            polls.answers.push(answers);
+                            polls.save(function (err) {
+                                 if (err) res.json({code: 0, error: err});
+                                 else{
+                                     res.json({code: 1, result: poll});
+                                     // res.json({code: 1, result: answers});
+                                 }
+                             });
+                         }
+                });
               }
           });
       }

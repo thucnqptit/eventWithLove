@@ -26,19 +26,21 @@ var login =  function (req, res) {
                         access_token: user.access_token,
                         user: user
                     });
+
+                    req.user = user;
+                    console.log(req.user);
                     // ls.set('at', user.access_token)
                 }
             });
     }
-    var loginFB =  function (req, res) {
-        var at = req.body.at;
-        request('https://graph.facebook.com/v2.11/me?access_token=' + at, { json: true }, (err, res, body) => {
-              if (err) { return console.log(err); }
-              console.log(body.url);
-              console.log(body.explanation);
-            });
-        }
-
+    // var loginFB =  function (req, res) {
+    //     var at = req.body.at;
+    //     request('https://graph.facebook.com/v2.11/me?access_token=' + at, { json: true }, (err, res, body) => {
+    //           if (err) { return console.log(err); }
+    //           console.log(body.url);
+    //           console.log(body.explanation);
+    //         });
+    //     }
 var logout =  function (req, res) {
         var userId = req.user._id;
         usersModel.update(

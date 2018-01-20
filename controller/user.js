@@ -1,13 +1,12 @@
 /* eslint-disable camelcase */
 /* eslint-disable max-len */
-var CODE = require('../constants');
 var User = require('../models/user');
 var uuidv4 = require('uuid/v4');
 
 const verifyToken = (req, res) => {
     const user = req.user;
     res.json({
-        code: CODE.SUCCESS,
+        code: 1,
         result: user,
     });
 };
@@ -32,7 +31,6 @@ var login =  function (req, res) {
                     access_token: user.access_token,
                     user: user
                 });
-                // ls.set('at', user.access_token)
             }
         });
 }
@@ -183,18 +181,18 @@ var add = function(req, res) {
                 const user = await mUser.save();
                 if (user) {
                     res.json({
-                        code: CODE.SUCCESS,
+                        code: 1,
                         result: user,
                     })
                 } else {
                     res.json({
-                        code: CODE.OBJECT_NOT_FOUND,
+                        code: 2,
                         result: 'Error! Object not found',
                     });
                 }
             } else {
                 res.json({
-                    code: CODE.OBJECT_NOT_FOUND,
+                    code: 2,
                     result: 'Email exist'
                 })
             }

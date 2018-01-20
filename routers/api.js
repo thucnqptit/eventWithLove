@@ -1,11 +1,13 @@
-var user = require('../modules/users/usersModel');
+var mongoose = require('mongoose');
 var express = require('express');
-var usersModel = require('../modules/users/usersSchema');
+var user = require('../modules/users/usersModel');
+var usersSchema = require('../modules/users/usersSchema');
 var answers = require('../modules/answers/answersModel');
 var processes = require('../modules/processes/processesModel');
 var polls = require('../modules/polls/pollsModel');
+var questions = require('../modules/questions/questionsModel');
 var events = require('../modules/events/eventsModel');
-
+var usersModel = mongoose.model('users', usersSchema);
 
 var router = express.Router();
 
@@ -25,7 +27,7 @@ function isVerifiedToken(req, res, next) {
           message: 'Phiên làm việc hết hạn'
         });
       } else {
-        req.users = users;
+        req.user = user;
         return next();
       }
     });
@@ -45,6 +47,11 @@ router.get('/answers/:id',isVerifiedToken, answers.getAnswerById);
 router.post('/answers',isVerifiedToken,answers.addAnswer);
 router.put('/answers', isVerifiedToken, answers.editAnswer);
 
+router.get('/questions',isVerifiedToken, questions.getQuestionsOnPage);
+router.get('/questions/:id',isVerifiedToken, questions.getQuestionById);
+router.post('/questions',isVerifiedToken,questions.addQuestion);
+router.put('/questions', isVerifiedToken, questions.editQuestion);
+
 router.get('/events',isVerifiedToken, events.getEventsOnPage);
 router.get('/events/:id',isVerifiedToken, events.getEventById);
 router.post('/events',isVerifiedToken,events.addEvent);
@@ -59,8 +66,5 @@ router.get('/processes',isVerifiedToken, processes.getProcessesOnPage);
 router.get('/processes/:id',isVerifiedToken, processes.getProcessById);
 router.post('/processes',isVerifiedToken,processes.addProcess);
 router.put('/processes', isVerifiedToken, processes.editProcess);
-
-// -------------------------------- User --------------------------------------------------
-// router.post('/u/user/', user.add);
 
 module.exports = router;

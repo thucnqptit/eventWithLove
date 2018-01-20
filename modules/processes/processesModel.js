@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const processesSchema = require('./processesSchema');
-
+const eventsSchema = require('../events/eventsSchema');
+let eventsModel = mongoose.model('events', eventsSchema);
 let processesModel = mongoose.model('processes', processesSchema);
 
 var getProcessesOnPage = function (req, res) {
@@ -56,7 +57,20 @@ var addProcess = function(req, res) {
           processes.save(function (err) {
               if (err) res.json({code: 0, error: err});
               else {
-                  res.json({code: 1, result: processes});
+                var eventsId = req.query.eId;
+                     eventsModel.findOne({_id: eventsId}, function (err, events) {
+                         if (err) res.json({code: 0, error: err});
+                         else if (!event) res.json({code: 2, error: 'khong tim thay su kien'});
+                         else {
+                           events.processes.push(processes._id);
+                             events.save(function (err) {
+                                 if (err) res.json({code: 0, error: err});
+                                 else{
+                                     res.json({code: 1, result: event});
+                                 }
+                             });
+                         }
+                     });
               }
           });
       }

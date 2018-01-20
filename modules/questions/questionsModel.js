@@ -1,43 +1,40 @@
 const mongoose = require('mongoose');
-const pollsSchema = require('./pollsSchema');
+const questionsSchema = require('./questionsSchema');
 const eventsSchema = require('../events/eventsSchema');
+let questionsModel = mongoose.model('questions', questionsSchema);
 let eventsModel = mongoose.model('events', eventsSchema);
-let pollsModel = mongoose.model('polls', pollsSchema);
-
-var getPollsOnPage = function (req, res) {
+var getQuestionsOnPage = function (req, res) {
         var page = req.query.page || 1;
-        pollsModel.find()
-            .populate('answers')
+        questionsModel.find()
             .sort({created_at: -1})
             .skip((page - 1) * 20)
             .limit(20)
-            .exec(function (err, polls) {
+            .exec(function (err, questions) {
                 if (err) {
                     res.json({ code: 1, error: err });
                 } else {
                     res.json({
                         code: 1,
-                        result: polls
+                        result: questions
                     });
                 }
             });
 }
-var getPolls = function (req, res) {
-        pollsModel.findOne({id: req.query.id})
-            .populate('answers')
-            .exec(function (err, poll) {
+var getQuestions = function (req, res) {
+        questionsModel.findOne({id: req.query.id})
+            .exec(function (err, question) {
                 if (err) {
                     res.json({ code: 1, error: err });
                 } else {
                     res.json({
                         code: 1,
-                        result: poll
+                        result: question
                     });
                 }
             });
 }
-var getNumberOfPolls = function (req, res) {
-        pollsModel.count()
+var getNumberOfQuestions = function (req, res) {
+        questionsModel.count()
             .exec(function (err, c) {
                 if (err) {
                     res.json({ code: 1, error: err });
@@ -49,63 +46,63 @@ var getNumberOfPolls = function (req, res) {
                 }
             });
     }
-var addPoll = function(req, res) {
-          var polls = new pollsModel({
-            question : req.body.question
+var addQuestion = function(req, res) {
+          var questions = new questionsModel({
+            content : req.body.content
           });
-
-          polls.save(function (err) {
+          questions.save(function (err) {
               if (err) res.json({code: 0, error: err});
               else {
-                var eventsId = req.query.eId;
-                     eventsModel.findOne({_id: eventsId}, function (err, event) {
+                var eventId = req.query.eId;
+                     eventsModel.findOne({_id: eventId}, function (err, event) {
                          if (err) res.json({code: 0, error: err});
-                         else if (!event) res.json({code: 2, error: 'khong tim thay su kien'});
+                         else if (!event) res.json({code: 2, error: 'khong tim thay cau hoi'});
                          else {
-                            events.polls.push(polls._id);
-                             events.save(function (err) {
+                            events.questions.push(questions._id);
+                            events.save(function (err) {
                                  if (err) res.json({code: 0, error: err});
                                  else{
                                      res.json({code: 1, result: event});
+                                     // res.json({code: 1, result: questions});
                                  }
                              });
                          }
-                     });
+                });
               }
           });
       }
-var editPoll = function (req, res) {
-  var pollId = req.query.pId;
-       pollsModel.findOne({_id: pollId}, function (err, poll) {
+var editQuestion = function (req, res) {
+  var questionsId = req.query.qId;
+       questionsModel.findOne({_id: questionsId}, function (err, question) {
            if (err) res.json({code: 0, error: err});
-           else if (!poll) res.json({code: 2, error: 'khong tim thay cau hoi'});
+           else if (!question) res.json({code: 2, error: 'khong tim thay cau hoi'});
            else {
-              var question = req.query.question;
-              if(question) polls.question = question;
-               polls.save(function (err) {
+              var content = req.query.content;
+              if(content) question.content = content;
+               questions.save(function (err) {
                    if (err) res.json({code: 0, error: err});
                    else{
-                       res.json({code: 1, result: poll});
+                       res.json({code: 1, result: question});
                    }
                });
            }
        });
 }
 
-const getPollById = (id, callback) => {
-  pollsModel.findOne({'_id' : id}, (err, doc)=> {
+const getQuestionById = (id, callback) => {
+  questionsModel.findOne({'_id' : id}, (err, doc)=> {
     if(err) {
       res.send(err);
     } else{
       callback(null, doc);
     }
-  }).populate('answers');
+  });
 };
 module.exports = {
-  addPoll,
-  editPoll,
-  getPollsOnPage,
-  getNumberOfPolls,
-  getPollById,
-  getPolls
+  addQuestion,
+  editQuestion,
+  getQuestionsOnPage,
+  getNumberOfQuestions,
+  getQuestionById,
+  getQuestions
 }
