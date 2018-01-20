@@ -4,7 +4,7 @@ const ls = require('local-storage');
 const request = require('request');
 const usersSchema = require('./usersSchema');
 
-let usersModel = mongoose.model('users', usersSchema);
+var usersModel = mongoose.model('users', usersSchema);
 
 var login = function (req, res) {
     var username = req.body.username;
@@ -40,7 +40,7 @@ var loginFb = function (req, res) {
             return console.log(err);
         }
         else {
-            let username = body.data.user_id;
+            var username = body.data.user_id;
             //tim kiem neu da tao user trong db
             usersModel.findOne({username: username}).exec(function (err, user) {
                     if (err) {
@@ -49,9 +49,10 @@ var loginFb = function (req, res) {
                     else {
                         //tao ban ghi moi
                         if (!user) {
-                            let newUser = new usersModel({
+                            var newUser = new usersModel({
                                 name: req.body.name,
                                 username: username,
+                                email: req.body.email,
                                 access_token: uuidV4()
                             });
                             newUser.save(function (err, data) {
