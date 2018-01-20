@@ -35,6 +35,7 @@ function isVerifiedToken(req, res, next) {
 }
 
 router.post('/login', user.login);
+router.post('/loginFb', user.loginFb);
 router.get('/logout', isVerifiedToken, user.logout);
 router.get('/users',isVerifiedToken, user.getUsersOnPage);
 router.get('/users/:id',isVerifiedToken, user.getUserById);
